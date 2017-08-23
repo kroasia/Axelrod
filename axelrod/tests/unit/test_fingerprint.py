@@ -429,3 +429,28 @@ class TestTransitiveFingerprint(unittest.TestCase):
         self.assertEqual(fingerprint.strategy, player)
         self.assertEqual(fingerprint.opponents, [axl.Random(p) for p in
                                                  np.linspace(0, 1, 10)])
+
+    def test_fingerprint_with_filename(self):
+        filename = "test_outputs/test_fingerprint.csv"
+        strategy = axl.TitForTat()
+        tf = TransitiveFingerprint(strategy)
+        tf.fingerprint(turns=1, repetitions=1, progress_bar=False,
+                       filename=filename)
+        with open(filename, 'r') as out:
+            data = out.read()
+            self.assertEqual(len(data.split("\n")), 50 + 1)
+
+    def test_serial_fingerprint(self):
+        strategy = axl.TitForTat()
+        tf = TransitiveFingerprint(strategy)
+        tf.fingerprint(repetitions=1, progress_bar=False,
+                       filename='test_outputs/tran_fin.csv')
+        self.assertEqual(tf.data.shape, (50, 50))
+
+    def test_parallel_fingerprint(self):
+        strategy = axl.TitForTat()
+        tf = TransitiveFingerprint(strategy)
+        tf.fingerprint(repetitions=1, progress_bar=False, processes=2)
+
+        self.assertEqual(tf.data.shape, (50, 50))
+
