@@ -454,3 +454,22 @@ class TestTransitiveFingerprint(unittest.TestCase):
 
         self.assertEqual(tf.data.shape, (50, 50))
 
+    def test_analyse_cooperation_ratio(self):
+        tf = TransitiveFingerprint(axl.TitForTat)
+        filename = "test_outputs/test_fingerprint.csv"
+        with open(filename, "w") as f:
+            f.write(
+"""0,1,Player0,Player1,CCC,DDD
+0,1,Player0,Player1,CCC,DDD
+0,2,Player0,Player2,CCD,DDD
+0,2,Player0,Player2,CCC,DDD
+0,3,Player0,Player3,CCD,DDD
+0,3,Player0,Player3,DCC,DDD
+0,4,Player0,Player3,DDD,DDD
+0,4,Player0,Player3,DDD,DDD""")
+        data = tf.analyse_cooperation_ratio(filename)
+        expected_data = np.array([[1, 1, 1],
+                                  [1, 1, 1 / 2],
+                                  [1 / 2, 1, 1 / 2],
+                                  [0, 0, 0]])
+        self.assertTrue(np.array_equal(data, expected_data))
