@@ -1,8 +1,11 @@
 import os
-from tempfile import mkstemp
 import unittest
+from tempfile import mkstemp
 from unittest.mock import patch
+
+import numpy as np
 from hypothesis import given, settings
+
 import axelrod as axl
 from axelrod.fingerprint import (create_points, create_jossann, create_probes,
                                  create_edges, generate_data, reshape_data,
@@ -399,3 +402,30 @@ class TestFingerprint(unittest.TestCase):
         data = af.fingerprint(turns=2, repetitions=2, step=0.5,
                               progress_bar=False)
         self.assertIsInstance(data, dict)
+
+
+class TestTransitiveFingerprint(unittest.TestCase):
+
+    def test_init(self):
+        player = axl.TitForTat()
+        fingerprint = axl.TransitiveFingerprint(strategy=player)
+        self.assertEqual(fingerprint.strategy, player)
+        self.assertEqual(fingerprint.opponents, [axl.Random(p) for p in
+                                                 np.linspace(0, 1, 50)])
+
+    def test_init_with_opponents(self):
+        player = axl.TitForTat()
+        opponents = [s() for s in axl.demo_strategies]
+        fingerprint = axl.TransitiveFingerprint(strategy=player,
+                                                opponents=opponents)
+        self.assertEqual(fingerprint.strategy, player)
+        self.assertEqual(fingerprint.opponents, opponents)
+
+    def test_init_with_not_default_number(self):
+        player = axl.TitForTat()
+        number_opponents = 10
+        fingerprint = axl.TransitiveFingerprint(strategy=player,
+                                                number_opponents=number_opponents)
+        self.assertEqual(fingerprint.strategy, player)
+        self.assertEqual(fingerprint.opponents, [axl.Random(p) for p in
+                                                 np.linspace(0, 1, 10)])
