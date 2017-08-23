@@ -6,6 +6,7 @@ from tempfile import mkstemp
 import matplotlib.pyplot as plt
 import numpy as np
 import tqdm
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 import axelrod as axl
 from axelrod import Player
@@ -454,3 +455,39 @@ class TransitiveFingerprint(object):
 
         return np.array([cooperation_rates[index]
                          for index in cooperation_rates])
+
+    def plot(self, cmap: str = 'viridis', interpolation: str = 'none',
+             title: str = None, colorbar: bool = True, labels: bool = True,
+             display_names: bool = False) -> plt.Figure:
+
+        fig, ax = plt.subplots()
+        mat = ax.imshow(self.data, cmap=cmap, interpolation=interpolation)
+
+        width = len(self.data) / 2
+        height = width
+        fig.set_size_inches(width, height)
+
+        plt.xlabel('turns')
+        ax.tick_params(axis='both', which='both', length=0)
+
+        if display_names:
+            plt.yticks(range(len(self.opponents)), [str(player) for player in
+                                                    self.opponents])
+
+        if not labels:
+            plt.axis('off')
+
+        if title is not None:
+            plt.title(title)
+
+        if colorbar:
+            max_score = 0
+            min_score = 1
+            ticks = [min_score, 1 / 2, max_score]
+
+            divider = make_axes_locatable(ax)
+            cax = divider.append_axes("right", size="5%", pad=0.2)
+            cax.tick_params(labelsize=40)
+            cbar = fig.colorbar(mat, cax=cax, ticks=ticks)
+
+        return fig
