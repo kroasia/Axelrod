@@ -407,8 +407,8 @@ class TransitiveFingerprint(object):
             self.opponents = opponents
 
     def fingerprint(self, turns: int = 50, repetitions: int = 10,
-                    noise: float = None, prob_end: float = None,
-                    processes: int = None, filename: str = None,
+                    noise: float = None, processes: int = None,
+                    filename: str = None,
                     progress_bar: bool = True) -> np.array:
 
         if isinstance(self.strategy, axl.Player):
@@ -423,7 +423,7 @@ class TransitiveFingerprint(object):
         edges = [(0, k + 1) for k in range(len(self.opponents))]
         tournament = axl.Tournament(players=players,
                                     edges=edges, turns=turns, noise=noise,
-                                    prob_end=prob_end, repetitions=repetitions)
+                                    repetitions=repetitions)
         tournament.play(filename=filename, build_results=False,
                         progress_bar=progress_bar, processes=processes)
 
