@@ -379,3 +379,29 @@ class AshlockFingerprint(object):
         if title is not None:
             plt.title(title)
         return fig
+
+
+class TransitiveFingerprint(object):
+    def __init__(self, strategy, opponents=None, number_opponents=50):
+        """
+        Parameters
+        ----------
+        strategy : class or instance
+            A class that must be descended from axelrod.Player or an instance of
+            axelrod.Player.
+        opponents : list of class or instance
+            A list that contains a list of opponents
+            Default: A spectrum of Random  players
+        number_opponents: integer
+            An integer that defines the number of Random opponents
+            Default: 50
+        """
+        self.strategy = strategy
+        self.number_opponents = number_opponents
+
+        if opponents is None:
+            self.opponents = [axl.Random(p) for p in
+                                            np.linspace(0, 1, number_opponents)]
+        else:
+            self.opponents = opponents
+

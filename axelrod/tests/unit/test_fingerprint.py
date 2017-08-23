@@ -9,7 +9,7 @@ from hypothesis import given, settings
 import axelrod as axl
 from axelrod.fingerprint import (create_points, create_jossann, create_probes,
                                  create_edges, generate_data, reshape_data,
-                                 AshlockFingerprint, Point)
+                                 AshlockFingerprint, Point, TransitiveFingerprint)
 from axelrod.tests.property import strategy_lists
 
 
