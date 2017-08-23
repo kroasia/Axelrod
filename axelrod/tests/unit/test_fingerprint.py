@@ -466,3 +466,24 @@ class TestTransitiveFingerprint(unittest.TestCase):
                                   [1 / 2, 1, 1 / 2],
                                   [0, 0, 0]])
         self.assertTrue(np.array_equal(data, expected_data))
+
+    def test_plot(self):
+        """
+        Test that plot is created with various arguments.
+        """
+        tf = TransitiveFingerprint(axl.TitForTat)
+        tf.fingerprint(turns=10, repetitions=2, progress_bar=False)
+        p = tf.plot()
+        self.assertIsInstance(p, matplotlib.pyplot.Figure)
+        p = tf.plot(cmap="jet")
+        self.assertIsInstance(p, matplotlib.pyplot.Figure)
+        p = tf.plot(interpolation='bicubic')
+        self.assertIsInstance(p, matplotlib.pyplot.Figure)
+        p = tf.plot(title="Title")
+        self.assertIsInstance(p, matplotlib.pyplot.Figure)
+        p = tf.plot(colorbar=False)
+        self.assertIsInstance(p, matplotlib.pyplot.Figure)
+        p = tf.plot(labels=False)
+        self.assertIsInstance(p, matplotlib.pyplot.Figure)
+        p = tf.plot(display_names=True)
+        self.assertIsInstance(p, matplotlib.pyplot.Figure)
